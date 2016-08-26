@@ -13,22 +13,33 @@ public class Directory extends xyz.vangamo.base.Base {
 	 */
 	private static final long serialVersionUID = 4489755107694156427L;
 
-	public static String[] FIELDS = {
-/* 03 */    "storage"
-/* 04 */   ,"parent"
-/* 05 */   ,"uri"
-/* 06 */   ,"name"
-/* 07 */   ,"creationTime"
-/* 08 */   ,"modificationTime"
-/* 09 */   ,"size"
-/* 10 */   ,"owner"
+	public static String[] FIELD_NAMES = {
+/* 05 */    "storage"
+/* 06 */   ,"parent"
+/* 07 */   ,"uri"
+/* 08 */   ,"name"
+/* 09 */   ,"creationTime"
+/* 10 */   ,"modificationTime"
+/* 11 */   ,"size"
+/* 12 */   ,"owner"
             };
 
+	public static String[] FIELD_TYPES = {
+/* 05 */    "circleref"
+/* 06 */   ,"inverseref"
+/* 07 */   ,"text"
+/* 08 */   ,"text"
+/* 09 */   ,"time"
+/* 10 */   ,"time"
+/* 11 */   ,"int"
+/* 12 */   ,"circleref"
+            };
+	
     static {
         COMPOSE_FIELDS( Directory.class.getSuperclass(), Directory.class );
 
-        for( int i=0; i<FIELDS.length; i++ ) {
-            System.out.println( "Directory.FIELDS["+i+"] = " + File.FIELDS[i] );
+        for( int i=0; i<FIELD_NAMES.length; i++ ) {
+            System.out.println( "Directory.FIELD_NAMES["+i+"] = " + Directory.FIELD_NAMES[i] );
             }
         }
 
@@ -52,7 +63,7 @@ public class Directory extends xyz.vangamo.base.Base {
     // Constructors.
 
     public Directory( Long id, DirectoryManager actualManager ) {
-    	this( Directory.FIELDS );
+    	this( Directory.FIELD_NAMES );
 
     	this.manager = actualManager;
 
@@ -60,7 +71,7 @@ public class Directory extends xyz.vangamo.base.Base {
     	}
 
     public Directory( Long id ) {
-    	this( Directory.FIELDS );
+    	this( Directory.FIELD_NAMES );
 
     	this.getManager().readById( id, this );
     	}
@@ -68,7 +79,7 @@ public class Directory extends xyz.vangamo.base.Base {
 
 
     public Directory( String uri, DirectoryManager actualManager ) {
-    	this( Directory.FIELDS );
+    	this( Directory.FIELD_NAMES );
 
     	this.manager = actualManager;
     	this.setString( "uri", uri );
@@ -79,7 +90,7 @@ public class Directory extends xyz.vangamo.base.Base {
 
 
 	public Directory( String uri ) {
-    	this( Directory.FIELDS );
+    	this( Directory.FIELD_NAMES );
 
     	this.setString( "uri", uri );
 
@@ -138,7 +149,7 @@ public class Directory extends xyz.vangamo.base.Base {
     	//  DB data goes to Vector and any existing value goes to DIRTY.
 
     	for( String field: data.keySet() ) {
-    		int    fieldIdx = java.util.Arrays.asList( this.FIELDNAMES ).indexOf( field );
+    		int    fieldIdx = java.util.Arrays.asList( this.FIELD_NAMES ).indexOf( field );
     		Object oldValue = this.get( field );
 
     		this.setElementAt( data.get(field), fieldIdx );
@@ -219,8 +230,8 @@ public class Directory extends xyz.vangamo.base.Base {
     	output += " (";
 
     	String separator = "";
-    	for( String fieldName: this.FIELDNAMES ) {
-    		int fieldIdx = java.util.Arrays.asList( this.FIELDNAMES ).indexOf( fieldName );
+    	for( String fieldName: this.FIELD_NAMES ) {
+    		int fieldIdx = java.util.Arrays.asList( this.FIELD_NAMES ).indexOf( fieldName );
     		if( "id".equals(fieldName) ) {
 
     			}

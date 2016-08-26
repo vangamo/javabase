@@ -15,16 +15,29 @@ public class PhotoFile extends File {
 
 
 
-	public static String[] FIELDS = {
-/* 13 */    "format"
-/* 14 */   ,"width"
-/* 15 */   ,"height"
-/* 16 */   ,"pixelDepth"
-/* 17 */   ,"density"
-/* 18 */   ,"event"
-/* 19 */   ,"locations"
-/* 20 */   ,"people"
+	public static String[] FIELD_NAMES = {
+/* 15 */    "format"
+/* 16 */   ,"width"
+/* 17 */   ,"height"
+/* 18 */   ,"pixelDepth"
+/* 19 */   ,"widthDensity"
+/* 20 */   ,"heightDensity"
+/* 21 */   ,"event"
+/* 22 */   ,"locations"
+/* 23 */   ,"people"
             };
+
+	public static String[] FIELD_TYPES = {
+/* 15 */    "text"
+/* 16 */   ,"int"
+/* 17 */   ,"int"
+/* 18 */   ,"int"
+/* 19 */   ,"int"
+/* 20 */   ,"int"
+/* 21 */   ,"circleref"
+/* 22 */   ,"circleref"
+/* 23 */   ,"circleref"
+            };	
 /*
            ,"captureTime"
            ,""
@@ -35,13 +48,13 @@ public class PhotoFile extends File {
     static {
         COMPOSE_FIELDS( PhotoFile.class.getSuperclass(), PhotoFile.class );
 
-        for( int i=0; i<PhotoFile.FIELDS.length; i++ ) {
-            System.out.println( "PhotoFile.FIELDS["+i+"] = " + PhotoFile.FIELDS[i] );
+        for( int i=0; i<PhotoFile.FIELD_NAMES.length; i++ ) {
+            System.out.println( "PhotoFile.FIELD_NAMES["+i+"] = " + PhotoFile.FIELD_NAMES[i] );
             }
         }
 
 
     public static PhotoFile getInstance( File file ) {
-    	return new PhotoFile( PhotoFile.FIELDS );
+    	return new PhotoFile( PhotoFile.FIELD_NAMES );
     	}
     }

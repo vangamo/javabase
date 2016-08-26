@@ -12,19 +12,27 @@ public class Base extends Vector<Object> {
 	private static final long serialVersionUID = 845271491656879076L;
 
 
-	public static String[] FIELDS = {
-/* 01 */    "id",
-/* 02 */    "type"
+	public static String[] FIELD_NAMES = {
+/* 01 */    "id"
+/* 02 */   ,"type"
+/* 03 */   ,"app"
+/* 04 */   ,"name"
             };
 
+	public static String[] FIELD_TYPES = {
+/* 01 */    "ref"
+/* 02 */   ,"type"
+/* 03 */   ,"text"
+/* 04 */   ,"text"
+            };
 
 
 
 
     // Instance attributes.
 
-    protected String[]       FIELDNAMES   = null;
-//    protected Object[]       VALUES       = null;
+    protected String[]       FIELDS       = null;
+    protected int            FIELD_STATES = 0;
     protected Vector<Object> DIRTY_VALUES = null;
 
 
@@ -34,32 +42,23 @@ public class Base extends Vector<Object> {
     // Constructors.
 
     protected Base() {
-    	this( Base.FIELDS );
+    	this( Base.FIELD_NAMES );
     	}
 
     public Base( String[] fields ) {
     	this( fields.length );
 
-    	this.FIELDNAMES = fields;
+    	this.FIELDS = fields;
     	}
 
     protected Base( int size ) {
     	super( size, 0 );
 
-//        this.VALUES       = new Object[ size ];
         this.DIRTY_VALUES = new Vector<Object>( size );
         this.DIRTY_VALUES.setSize(size);
         this.setSize(size);
 
         System.out.println( "Base() Size = "+this.size() );
-/*
-        for( int idx = size-1; idx >=0; --idx ) {
-        	this.setElementAt( null, idx );
-        	this.DIRTY_VALUES.setElementAt( null, idx );
-        	}
-
-System.out.println( "Base() Size = "+this.size() );
-*/
         }
 
 
@@ -70,21 +69,15 @@ System.out.println( "Base() Size = "+this.size() );
 
     @Override
 	public Object get( int fieldIdx ) {
-/*
-        if( null != this.DIRTY_VALUES[ fieldIdx] ) {
-            return this.DIRTY_VALUES[ fieldIdx];
-        	}
-*/
     	if( null != this.DIRTY_VALUES.elementAt(fieldIdx) ) {
     		return this.DIRTY_VALUES.elementAt( fieldIdx );
     		}
 
-//        return this.VALUES[ fieldIdx ];
         return this.elementAt( fieldIdx );
         }
 
     public Object get( String field ) {
-        int fieldIdx = java.util.Arrays.asList( this.FIELDNAMES ).indexOf( field );
+        int fieldIdx = java.util.Arrays.asList( this.FIELDS ).indexOf( field );
         if( fieldIdx < 0 ) { return null; }
 
         return this.get( fieldIdx );
@@ -125,7 +118,7 @@ System.out.println( "base.set() not setting" );
         }
 
     public Object set( String field, Object value ) {
-        int fieldIdx = java.util.Arrays.asList( this.FIELDNAMES ).indexOf( field );
+        int fieldIdx = java.util.Arrays.asList( this.FIELDS ).indexOf( field );
         if( fieldIdx < 0 ) { return null; }
 
         return this.set( fieldIdx, value );
@@ -178,8 +171,8 @@ System.out.println( "base.set() not setting" );
     	output += " (";
 
     	String separator = "";
-    	for( String fieldName: this.FIELDNAMES ) {
-    		int fieldIdx = java.util.Arrays.asList( this.FIELDNAMES ).indexOf( fieldName );
+    	for( String fieldName: this.FIELDS ) {
+    		int fieldIdx = java.util.Arrays.asList( this.FIELDS ).indexOf( fieldName );
     		if( "id".equals(fieldName) ) {
 
     			}
@@ -210,22 +203,29 @@ System.out.println( "base.set() not setting" );
 
     protected static void COMPOSE_FIELDS( Class parent, Class child ) {
         try {
-            String[] parentFields = (String[])parent.getField("FIELDS").get(null);
-            String[] childFields  = (String[]) child.getField("FIELDS").get(null);
+            String[] parentFieldNames = (String[])parent.getField("FIELD_NAMES").get(null);
+            String[] parentFieldTypes = (String[])parent.getField("FIELD_TYPES").get(null);
+            String[] childFieldNames  = (String[]) child.getField("FIELD_NAMES").get(null);
+            String[] childFieldTypes  = (String[]) child.getField("FIELD_TYPES").get(null);
 
-            int parentNumFields = parentFields.length;
-            int childNumFields  = childFields.length;
+            int parentNumFields = parentFieldNames.length;
+            int childNumFields  = childFieldNames.length;
             int finalNumFields  = parentNumFields + childNumFields;
 
-            String[] allFields = new String[ finalNumFields ];
+            String[] allFieldNames = new String[ finalNumFields ];
+            System.arraycopy( parentFieldNames, 0, allFieldNames, 0,               parentNumFields );
+            System.arraycopy( childFieldNames,  0, allFieldNames, parentNumFields, childNumFields );
 
-            System.arraycopy( parentFields, 0, allFields, 0,               parentNumFields );
-            System.arraycopy( childFields,  0, allFields, parentNumFields, childNumFields );
+            child.getField("FIELD_NAMES").set( null, allFieldNames );
 
-            child.getField("FIELDS").set( null, allFields );
+            String[] allFieldTypes = new String[ finalNumFields ];
+            System.arraycopy( parentFieldTypes, 0, allFieldTypes, 0,               parentNumFields );
+            System.arraycopy( childFieldTypes,  0, allFieldTypes, parentNumFields, childNumFields );
+
+            child.getField("FIELD_TYPES").set( null, allFieldTypes );
             }
-        catch( NoSuchFieldException nsfEx ) { System.out.println(nsfEx); }
-        catch( IllegalAccessException iaEx ) { System.out.println(iaEx); }
+        catch( NoSuchFieldException   nsfEx ) { System.out.println(nsfEx); }
+        catch( IllegalAccessException iaEx  ) { System.out.println(iaEx); }
         }
 
     }  //  class Base
